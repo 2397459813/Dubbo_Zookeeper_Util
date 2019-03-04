@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	  
+	<dubbo:registry address="zookeeper://68.168.138.63:2181?backup=68.168.138.63:2182,68.168.138.63:2183" />
+	<!-- usercore原子服务统一调用 -->
+	<dubbo:reference retries="0" timeout="60000" group="usercoreGroup"
+		interface="com.liu.apidubbo.IControlService" id="usercoreImpl" />
+	<!-- ordercore原子服务统一调用 -->
+	<dubbo:reference retries="0" timeout="60000" group="ordercoreGroup"
+		interface="com.liu.apidubbo.IControlService" id="ordercoreImpl" />
+	<!-- 消息队列原子服务统一调用 (待定)-->
+</beans>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+    http://www.springframework.org/schema/tx  
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+	<!-- 配置事物管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+    <!-- .配置事务属性 -->
+	<tx:advice id="txAdvice"  transaction-manager="transactionManager">
+		<tx:attributes>
+		    <!-- 事物传播机制 REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择   SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。 -->
+			<tx:method name="get*" propagation="SUPPORTS" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  read-only="true" />
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException" />
+			<tx:method name="commit*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="query*" propagation="SUPPORTS" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="del*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="find*" propagation="SUPPORTS" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  read-only="true" />
+			<tx:method name="submit*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="multiSelect*" propagation="SUPPORTS" rollback-for="Exception,com.liu.usercore.util.UserCoreException" read-only="true" />
+			<tx:method name="import*" propagation="SUPPORTS" rollback-for="Exception,com.liu.usercore.util.UserCoreException" />
+			<tx:method name="task*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="remove*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+			<tx:method name="search*" propagation="REQUIRED" rollback-for="Exception,com.liu.usercore.util.UserCoreException"  />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 配置事务切入点，注入事务属性 -->
+	<aop:config>
+		<aop:pointcut id="interceptorPointCuts" expression="execution(* com.liu.usercore.service..*.* (..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>
+	</aop:config>
+	
+
+	
+</beans>

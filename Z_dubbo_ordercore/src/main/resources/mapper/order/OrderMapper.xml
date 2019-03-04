@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="order">
+  <resultMap id="orderInfo" type="map">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+  </resultMap>
+ 
+	<!-- 根据手机号查询用户信息-->
+	<select id="queryByPhone" parameterType="map" resultMap="orderInfo">
+		select
+			id,
+			phone,
+			date
+		from
+			t_order
+		where
+			phone = #{phone,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="map">
+		insert into t_order
+		 (
+			id,
+			phone,
+			date
+		)
+		
+		values 
+		
+			(
+			#{id,jdbcType=BIGINT},
+	        #{phone,jdbcType=VARCHAR},
+			#{date,jdbcType=TIMESTAMP}
+			
+			)
+	</insert>
+</mapper>

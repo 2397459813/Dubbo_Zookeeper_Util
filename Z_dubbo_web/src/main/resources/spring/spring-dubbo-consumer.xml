@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+ http://code.alibabatech.com/schema/dubbo
+ http://code.alibabatech.com/schema/dubbo/dubbo.xsd" >
+
+	<dubbo:application name="consumer-of-web"/>
+	<dubbo:registry address="zookeeper://68.168.138.63:2181?backup=68.168.138.63:2182,68.168.138.63:2183" />
+	<dubbo:reference id="serviceaggrImpl" interface="com.liu.apidubbo.IControlService" group="serviceaggrGroup" retries="0" check="true" timeout="60000"/>
+    <dubbo:reference id="servicetestImpl" interface="com.liu.apidubbo.IControlService" group="servicetestGroup" retries="0" check="true" timeout="60000"/>
+    <!-- serviceaggrSV 将远程服务作为自己的controlService属性进行注入，调用serviceaggrSV的execute就会调用远程服务提供的execute方法 -->
+    <bean id="serviceaggrSV" class="com.liu.web.common.control.remote.impl.ServiceaggrSV">
+		<property name="controlService" ref="serviceaggrImpl" />
+	</bean> 
+	
+	<bean id="servicetestSV" class="com.liu.web.common.control.remote.impl.ServicetestSV">
+		<property name="controlService" ref="servicetestImpl" />
+	</bean>
+	
+	
+</beans>

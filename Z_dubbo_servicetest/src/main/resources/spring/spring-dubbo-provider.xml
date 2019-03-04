@@ -1,0 +1,20 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="provider-of-servicetest"/>
+
+ 	<!-- 暴露服务的接口包地址和消费服务的接口包地址和名称要保持一致，网络传输的对象需要序列化 -->
+    <dubbo:registry address="zookeeper://68.168.138.63:2181?backup=68.168.138.63:2182,68.168.138.63:2183" />
+
+    <!-- 用dubbo协议定义暴露的port   -->
+    <dubbo:protocol name="dubbo" port="31004"/>
+    <dubbo:provider id="controlServiceProvider" threadpool="fixed" threads="500" retries="0" timeout="60000" delay="-1"/> 
+    <dubbo:service interface="com.liu.apidubbo.IControlService" ref="controlService" group="servicetestGroup" provider="controlServiceProvider"/>
+
+    <bean id="controlService" class="com.liu.servicetest.control.impl.ControlServiceImpl"/>
+
+</beans>
